@@ -3,7 +3,7 @@ import { View,Text,ScrollView, FlatList,Modal, Button,StyleSheet} from 'react-na
 import { Card,Icon,Rating,Input} from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
-import { postFavorite } from '../redux/ActionCreators';
+import { postFavorite,postComment } from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
     return {
@@ -16,7 +16,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
     postFavorite: (dishId) => dispatch(postFavorite(dishId)),
-    postComment: (dishId) => dispatch(postComment(dishId, rating, author, comment))
+    postComment: (dishId, rating, author, comment) => dispatch(postComment(dishId, rating, author, comment))
 })
 
 function RenderDish(props){
@@ -85,6 +85,7 @@ class DishDetail extends Component {
         super(props);
 
         this.state = {
+            
             showModal: false
         }
     }
@@ -100,9 +101,10 @@ class DishDetail extends Component {
         this.setState({showModal: !this.state.showModal});
     }
 
-    handleComment(values) {
+    handleComment(dishId) {
+        
+        this.props.postComment(dishId,this.state.rating,this.state.author,this.state.comment);
         this.toggleModal();
-        this.props.postComment(this.dishId, values.state.rating, values.state.author, values.state.comment);
     
       }
     
@@ -125,22 +127,27 @@ class DishDetail extends Component {
                     onRequestClose = {() => this.toggleModal() }>
                     <View style = {styles.modal}>
                     <Rating
+                    showRating
                     type='star'
                     ratingCount={5}
-                    imageSize={60}
-                    showRating
+                    imageSize={40}
+                    
                    startingValue={this.state.rating}
                     onFinishRating={(rating)=> this.setState({rating : rating})}
                         />
                       <Input
                        placeholder='  Author'
                        leftIcon={{ type: 'font-awesome', name: 'user-o' }}
+
+                       startingValue={this.state.author}
                        onChangeText={(author) => this.setState({author: author})}
+                       value={this.state.author}
                         /> 
                          <Input
                        placeholder='  Comment'
                        leftIcon={{ type: 'font-awesome', name: 'comment-o' }}
                        onChangeText={(comment) => this.setState({comment: comment})}
+                       value={this.state.comment}
                         />  
                         
                         <Button 
