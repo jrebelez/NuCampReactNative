@@ -15,7 +15,8 @@ const mapStateToProps = state => {
 
 
 const mapDispatchToProps = dispatch => ({
-    postFavorite: (dishId) => dispatch(postFavorite(dishId))
+    postFavorite: (dishId) => dispatch(postFavorite(dishId)),
+    postComment: (dishId) => dispatch(postComment(dishId, rating, author, comment))
 })
 
 function RenderDish(props){
@@ -31,7 +32,7 @@ function RenderDish(props){
                 <Text style={{margin: 10}}>
                     {dish.description}
                     </Text>
-                    
+                    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
                     <Icon
                     raised
                     reverse
@@ -45,9 +46,10 @@ function RenderDish(props){
                     reverse
                     name='pencil'
                     type='font-awesome'
-                    color='#f50'
+                    color='#512DA8'
                     onPress={() => props.showModal() }
                     />
+                    </View>
                 </Card>
         );
     }
@@ -83,9 +85,6 @@ class DishDetail extends Component {
         super(props);
 
         this.state = {
-            rating: 5,
-            author: '',
-            comment: '',
             showModal: false
         }
     }
@@ -101,18 +100,12 @@ class DishDetail extends Component {
         this.setState({showModal: !this.state.showModal});
     }
 
-    handleComment() {
-        console.log(JSON.stringify(this.state));
+    handleComment(values) {
         this.toggleModal();
-    }
-    resetForm() {
-        this.setState({
-            rating: 5,
-            author: '',
-            comment: '',
-            showModal: false
-        });
-    }
+        this.props.postComment(this.dishId, values.state.rating, values.state.author, values.state.comment);
+    
+      }
+    
     
 
     render(){
@@ -123,6 +116,7 @@ class DishDetail extends Component {
             favorite={this.props.favorites.some(el => el === dishId)}
             onPress={() => this.markFavorite(dishId)} 
             showModal={() => this.toggleModal()}
+            postComment={() => this.handleComment(dishId)}
                 />
             <RenderComments comments={this.props.comments.comments.filter((comment) => comment.dishId === dishId)} />
             <Modal animationType = {"fade"} transparent = {false}
@@ -135,14 +129,29 @@ class DishDetail extends Component {
                     ratingCount={5}
                     imageSize={60}
                     showRating
+                   startingValue={this.state.rating}
+                    onFinishRating={(rating)=> this.setState({rating : rating})}
                         />
-                        <Text style = {styles.modalText}>Smoking?: {this.state.smoking ? 'Yes' : 'No'}</Text>
-                        <Text style = {styles.modalText}>Date and Time: {this.state.date}</Text>
+                      <Input
+                       placeholder='  Author'
+                       leftIcon={{ type: 'font-awesome', name: 'user-o' }}
+                       onChangeText={(author) => this.setState({author: author})}
+                        /> 
+                         <Input
+                       placeholder='  Comment'
+                       leftIcon={{ type: 'font-awesome', name: 'comment-o' }}
+                       onChangeText={(comment) => this.setState({comment: comment})}
+                        />  
                         
                         <Button 
-                            onPress = {() =>{this.toggleModal(); this.resetForm();}}
+                            onPress={() => this.handleComment(dishId)}
                             color="#512DA8"
-                            title="Close" 
+                            title="Submit" 
+                            />
+                            <Button 
+                            onPress = {() =>{this.toggleModal();}}
+                            color="#808080"
+                            title="Cancel" 
                             />
                     </View>
                 </Modal>
