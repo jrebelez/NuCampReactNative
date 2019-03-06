@@ -2,9 +2,11 @@ import React, { Component } from "react";
 import {  Text } from "react-native";
 import { Card } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
+import * as Animatable from 'react-native-animatable';
 
 function RenderContact() {
   return (
+    <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
     <Card title="Our Address">
       <Text> 121, Clear Water Bay Road</Text>
       <Text> Clear Water Bay, Kowloon</Text>
@@ -13,6 +15,7 @@ function RenderContact() {
       <Text> Fax: +852 8765 4321</Text>
       <Text>Email:confusion@food.net </Text>
     </Card>
+    </Animatable.View>
   );
 }
 class Contact extends Component {

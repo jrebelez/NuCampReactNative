@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { LEADERS } from "../shared/leaders";
+import * as Animatable from 'react-native-animatable';
 import { Text, FlatList } from "react-native";
 import { Card, ListItem, Title } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
@@ -77,14 +77,17 @@ class About extends Component {
         
 
       <ScrollView>
+          <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
         <History />
         <Card title="Corporate Leadership">
+
           <FlatList
             data={this.props.leaders.leaders}
             renderItem={renderLeadersItem}
             keyExtractor={item => item.id.toString()}
           />
         </Card>
+        </Animatable.View>
       </ScrollView>
     );
   }
