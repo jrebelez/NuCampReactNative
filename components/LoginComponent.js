@@ -25,7 +25,7 @@ componentDidMount(){
 
 }
 static navigationOptions = {
-    title: 'Login'
+    title: 'Login',
 };
 
 handleLogin(){
@@ -52,7 +52,7 @@ render(){
         placeholder="Password"
         leftIcon={{type: 'font-awesome', name: 'key'}}
         onChangeText={(password) => this.setState({password})}
-        value={this.state.username}
+        value={this.state.password}
         containerStyle={styles.formInput}
         />
         <CheckBox title="Remember Me"
