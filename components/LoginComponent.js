@@ -141,6 +141,22 @@ class RegisterTab extends Component {
             }
         }
     }
+    getImageFromGallery = async () => {
+        const cameraPermission = await Permissions.askAsync(Permissions.CAMERA);
+        const cameraRollPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+        if (cameraPermission.status === 'granted' && cameraRollPermission.status === 'granted'){
+            let galleryImage = await ImagePicker.launchImageLibraryAsync({
+                allowsEditing: true,
+                aspect: [4, 3],
+              });
+          
+            if (!galleryImage.cancelled){
+                console.log(galleryImage);
+                this.processImage(galleryImage.uri);
+            }
+        }
+    }
 
     processImage = async (imageUri) => {
         let processedImage = await ImageManipulator.manipulateAsync(
@@ -187,6 +203,10 @@ class RegisterTab extends Component {
                     <Button
                         title="Camera"
                         onPress={this.getImageFromCamera}
+                        />
+                        <Button
+                        title="Gallery"
+                        onPress={this.getImageFromGallery}
                         />
                 </View>
                 <Input
